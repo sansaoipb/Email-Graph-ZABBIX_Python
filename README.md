@@ -43,9 +43,17 @@ O "How to" foi testado no ZABBIX 2.4, 3.0, 3.2, 3.4, 4.0 e no 4.2 no Debian 8-9/
 
 <blockquote> <p>Instale os pacotes </p> </blockquote>
 <blockquote> <p> Debian/Ubuntu</p> </blockquote>
+<pre>$ sudo apt-get install -y wget unzip git dos2unix python-pip ; pip install requests<br></pre>
+<blockquote> <p>CentOS 6.x e 7</p> </blockquote>
+<pre>sudo yum install -y wget unzip git dos2unix python-pip ; pip install requests</pre>
+
+<!--
+<blockquote> <p>Instale os pacotes </p> </blockquote>
+<blockquote> <p> Debian/Ubuntu</p> </blockquote>
 <pre>$ sudo apt-get install -y wget unzip git dos2unix python-requests<br></pre>
 <blockquote> <p>CentOS 6.x e 7</p> </blockquote>
 <pre>sudo yum install -y wget unzip git dos2unix python-requests.noarch</pre>
+-->
 
 <blockquote> <p>Faça o download do script de instalação</p> </blockquote>
 <pre>cd /tmp ; wget https://raw.githubusercontent.com/sansaoipb/scripts/master/email.sh -O email.sh ; dos2unix email.sh ; sh email.sh</pre>
