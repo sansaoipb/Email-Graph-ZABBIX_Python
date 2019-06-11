@@ -92,6 +92,8 @@ smtp_server = PropertiesReaderX(path.format('configScrips.properties')).getValue
 smtp_server = re.search("(\w.+):(\d+)", smtp_server).groups()
 mail_user   = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'mail_user')
 mail_pass   = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'mail_pass')
+TSL = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'tsl')
+RELAY = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'relay_external')
 
 #################################################################################################################################################
 #################################################################################################################################################
@@ -179,22 +181,20 @@ try:
     itemname, eventid, itemid, color, period, body = sys.argv[3].split('#',6)
     period = int(period)
 except ValueError as e:
-    #print(str(e), 'at split (itemname, eventid, itemid, color, period, body) | Quantidade de argumentos insuficientes no split (itemname, eventid, itemid, color, period, body)')
     log.writelog('{0} >> at split (itemname, eventid, itemid, color, period, body) | Quantidade de argumentos insuficientes no split (itemname, eventid, itemid, color, period, body)'.format(str(e)), arqLog, "ERROR")
     exit()
 
-
 def send_mail(x, i):
     msgRoot = MIMEMultipart('related')
-    msgRoot['Subject'] = sys.argv[2]
-    msgRoot['From'] = email_from
     msgRoot['To'] = sys.argv[1]
+    msgRoot['From'] = email_from
+    msgRoot['Subject'] = sys.argv[2]
 
     msgAlternative = MIMEMultipart('alternative')
     msgRoot.attach(msgAlternative)
 
     if x == '0' or x == '3':
-        msgText = MIMEText('<p>%s,<p/><p>%s</p><br><img src="cid:image1">' % (salutation, body), 'html')
+        msgText = MIMEText('<p>{0},<p/><p>{1}</p><br><img src="cid:image1">'.format(salutation, body), 'html', _charset='utf-8')
         msgAlternative.attach(msgText)
 
         msgImage = MIMEImage(i)
@@ -202,25 +202,28 @@ def send_mail(x, i):
         msgImage.add_header('Content-ID', '<image1>')
         msgRoot.attach(msgImage)
     else:
-        msgText = MIMEText('<p>%s,<p/><p>%s</p>', 'html')
+        msgText = MIMEText('<p>{0},<p/><p>{1}</p>'.format(salutation, body), 'html')
         msgAlternative.attach(msgText)
 
     try:
-        # smtp = smtplib.SMTP('localhost')
-        # smtp.connect(smtp_server)
         smtp = smtplib.SMTP(smtp_server[0], smtp_server[1])
+        # smtp.connect(smtp_server)
         smtp.ehlo()
-        smtp.starttls()
-        smtp.login(mail_user, mail_pass)
+        if 'true' == str(TSL).lower():
+            smtp.starttls()
+
+        if 'true' == str(RELAY).lower():
+            smtp.login(mail_user, mail_pass)
         smtp.sendmail(email_from, sys.argv[1], msgRoot.as_string())
         ack()
         logout_api()
-        #print("Successfully sent email | Email enviado com sucesso")
         log.writelog('Successfully sent email | Email enviado com sucesso ({0})'.format(sys.argv[1]), arqLog, "INFO")
         smtp.quit()
     except smtplib.SMTPException:
-        #print("Error: Unable to send email | Não foi possível enviar o e-mail")
         log.writelog('Error: Unable to send email | Não foi possível enviar o e-mail ({0})'.format(sys.argv[1]), arqLog,"CRITICAL")
+        logout_api()
+        smtp.quit()
+        exit()
 
 try:
     login_api = requests.post('{0}/api_jsonrpc.php'.format(zbx_server), headers = {'Content-type': 'application/json'},\
@@ -242,21 +245,17 @@ try:
     if 'result' in login_api:
         auth = login_api["result"]
     elif 'error' in login_api:
-        #print('Zabbix: %s' % login_api["error"]["data"])
         log.writelog('Zabbix: {0}'.format(login_api["error"]["data"]), arqLog, "ERROR")
         exit()
     else:
-        #print(login_api)
         log.writelog('{0}'.format(login_api), arqLog, "CRITICAL")
         exit()
 
 except ValueError as e:
-    #print('Check declared zabbix URL/IP and try again | Valide a URL/IP do Zabbix declarada e tente novamente\nCurrent: %s' % zbx_server)
-    log.writelog('Check declared zabbix URL/IP and try again | Valide a URL/IP do Zabbix declarada e tente novamente. (Current: {0})'.format(zbx_server), arqLog, "CRITICAL")
+    log.writelog('Check declared zabbix URL/IP and try again | Valide a URL/IP do Zabbix declarada e tente novamente. (Current: {0})'.format(zbx_server), arqLog, "WARNING")
     exit()
 except Exception as e:
-    #print(e)
-    log.writelog('{0}'.format(str(e)), arqLog, "WARNING")
+    log.writelog('{0}'.format(str(e)), arqLog, "CRITICAL")
     exit()
 
 def version_api():
@@ -274,7 +273,6 @@ def version_api():
     if 'result' in resultado:
         resultado = resultado["result"]
     return resultado
-#print("Conectado na API do Zabbix Version {0}\n".format(version_api()))
 
 def logout_api():
     requests.post('{0}/api_jsonrpc.php'.format(zbx_server), headers = {'Content-type': 'application/json'},\
@@ -341,7 +339,6 @@ itemtype_api = json.loads(itemtype_api.text.encode('utf-8'))
 if itemtype_api["result"]:
     item_type = itemtype_api["result"][0]['value_type']
 else:
-    #print('Invalid ItemID or user has no read permission on item/host | ItemID inválido ou usuário sem permissão de leitura no item/host')
     log.writelog('Invalid ItemID or user has no read permission on item/host | ItemID inválido ou usuário sem permissão de leitura no item/host', arqLog, "WARNING")
     logout_api()
     exit()
@@ -394,5 +391,5 @@ if __name__ == '__main__':
         send_mail(item_type, get_graph.content)
 
     else:
-        send_mail(item_type, '**')
+        send_mail(item_type, r'**')
 

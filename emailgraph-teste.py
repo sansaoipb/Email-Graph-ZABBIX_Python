@@ -99,6 +99,8 @@ smtp_server = PropertiesReaderX(path.format('configScrips.properties')).getValue
 smtp_server = re.search("(\w.+):(\d+)", smtp_server).groups()
 mail_user   = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'mail_user')
 mail_pass   = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'mail_pass')
+TSL = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'tsl')
+RELAY = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'relay_external')
 
 ############################################################################################################
 ############################################################################################################
@@ -193,7 +195,7 @@ def send_mail(x, i):
     msgRoot.attach(msgAlternative)
 
     if x == '0' or x == '3':
-        msgText = MIMEText('<p>%s,<p/><p>%s</p><br><img src="cid:image1">' % (salutation, body), 'html')
+        msgText = MIMEText('<p>%s,<p/><p>%s</p><br><img src="cid:image1">' % (salutation, body), 'html', _charset='utf-8')
         msgAlternative.attach(msgText)
 
         msgImage = MIMEImage(i)
@@ -205,12 +207,14 @@ def send_mail(x, i):
         msgAlternative.attach(msgText)
 
     try:
-        #smtp = smtplib.SMTP('localhost')
-        # smtp.connect(smtp_server)
         smtp = smtplib.SMTP(smtp_server[0], smtp_server[1])
+        # smtp.connect(smtp_server)
         smtp.ehlo()
-        smtp.starttls()
-        smtp.login(mail_user, mail_pass)
+        if 'true' == str(TSL).lower():
+            smtp.starttls()
+
+        if 'true' == str(RELAY).lower():
+            smtp.login(mail_user, mail_pass)
         smtp.sendmail(email_from, sys.argv[1], msgRoot.as_string())
         logout_api()
         print("Successfully sent email | Email enviado com sucesso ({0})".format(sys.argv[1]))
@@ -219,7 +223,9 @@ def send_mail(x, i):
     except smtplib.SMTPException:
         print("Error: Unable to send email | Não foi possível enviar o e-mail ({0})".format(sys.argv[1]))
         log.writelog('Error: Unable to send email | Não foi possível enviar o e-mail ({0})'.format(sys.argv[1]), arqLog, "WARNING")
-
+        logout_api()
+        smtp.quit()
+        exit()
 try:
     login_api = requests.post('%s/api_jsonrpc.php' % zbx_server, headers = {'Content-type': 'application/json'},\
         data = json.dumps(
@@ -291,7 +297,7 @@ itemid = requests.post('%s/api_jsonrpc.php' % zbx_server, headers = {'Content-ty
             "method": "host.get",
             "params": {
                 "output": ["hostid"],
-		        "selectItems": ["itemid"],
+                "selectItems": ["itemid"],
             },
             "auth": auth,
             "id": 3
@@ -306,7 +312,7 @@ itemtype_api = requests.post('%s/api_jsonrpc.php' % zbx_server, headers = {'Cont
             "jsonrpc": "2.0",
             "method": "item.get",
             "params": {
-                "output": ["value_type"], "itemids": itemid
+                "output": ["value_type"], "itemids": itemid, "webitems": itemid
             },
             "auth": auth,
             "id": 2
@@ -347,5 +353,5 @@ if __name__ == '__main__':
         send_mail(item_type, get_graph.content)
 
     else:
-        send_mail(item_type, '**')
+        send_mail(item_type, r'**')
 
