@@ -192,28 +192,30 @@ def send_mail(x, i):
 
     msgAlternative = MIMEMultipart('alternative')
     msgRoot.attach(msgAlternative)
+    text = '<p>{0},<p/><p>{1}</p>'.format(salutation, body)
 
-    if x == '0' or x == '3':
-        msgText = MIMEText('<p>{0},<p/><p>{1}</p><br><img src="cid:image1">'.format(salutation, body), 'html', _charset='utf-8')
-        msgAlternative.attach(msgText)
-
+    if re.search("(0|3)", x):
+        text += '<br><img src="cid:image1">'
         msgImage = MIMEImage(i)
-
         msgImage.add_header('Content-ID', '<image1>')
         msgRoot.attach(msgImage)
-    else:
-        msgText = MIMEText('<p>{0},<p/><p>{1}</p>'.format(salutation, body), 'html')
-        msgAlternative.attach(msgText)
+
+    msgText = MIMEText(text, 'html', _charset='utf-8')
+    msgAlternative.attach(msgText)
 
     try:
         smtp = smtplib.SMTP(smtp_server[0], smtp_server[1])
-        # smtp.connect(smtp_server)
         smtp.ehlo()
-        if 'true' == str(TSL).lower():
+        try:
             smtp.starttls()
+        except Exception:
+            pass
 
-        if 'true' == str(RELAY).lower():
+        try:
             smtp.login(mail_user, mail_pass)
+        except Exception:
+            pass
+
         smtp.sendmail(email_from, sys.argv[1], msgRoot.as_string())
         ack()
         logout_api()
@@ -344,7 +346,7 @@ else:
     exit()
 
 if __name__ == '__main__':
-    if item_type == '0' or item_type == '3':
+    if re.search("(0|3)", item_type):
         try:
             loginpage = requests.get('%s/index.php' % zbx_server).text
             enter = re.search('<button.*value=".*>(.*?)</button>', loginpage)
