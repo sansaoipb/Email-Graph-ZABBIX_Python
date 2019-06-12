@@ -92,8 +92,6 @@ smtp_server = PropertiesReaderX(path.format('configScrips.properties')).getValue
 smtp_server = re.search("(\w.+):(\d+)", smtp_server).groups()
 mail_user   = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'mail_user')
 mail_pass   = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'mail_pass')
-TSL = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'tsl')
-RELAY = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSectionEmail', 'relay_external')
 
 #################################################################################################################################################
 #################################################################################################################################################
