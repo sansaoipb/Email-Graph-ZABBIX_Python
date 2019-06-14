@@ -204,6 +204,12 @@ def send_mail(x, i):
     try:
         smtp = smtplib.SMTP(smtp_server[0], smtp_server[1])
         smtp.ehlo()
+
+        try:
+            smtp.connect()
+        except Exception:
+            pass
+
         try:
             smtp.starttls()
         except Exception:
@@ -211,10 +217,19 @@ def send_mail(x, i):
 
         try:
             smtp.login(mail_user, mail_pass)
-        except Exception:
+        except smtplib.SMTPAuthenticationError as msg:
+            log.writelog('Error: Unable to send email | Não foi possível enviar o e-mail - {0}'.format(msg[1]),arqLog, "WARNING")
+            smtp.quit()
+            exit()
+        except smtplib.SMTPException:
             pass
 
-        smtp.sendmail(email_from, sys.argv[1], msgRoot.as_string())
+        try:
+            smtp.sendmail(email_from, sys.argv[1], msgRoot.as_string())
+        except Exception as msg:
+            log.writelog('Error: Unable to send email | Não foi possível enviar o e-mail - {0}'.format(msg[1]), arqLog,"WARNING")
+            smtp.quit()
+            exit()
         ack()
         logout_api()
         log.writelog('Successfully sent email | Email enviado com sucesso ({0})'.format(sys.argv[1]), arqLog, "INFO")
@@ -391,5 +406,5 @@ if __name__ == '__main__':
         send_mail(item_type, get_graph.content)
 
     else:
-        send_mail(item_type, r'**')
+        send_mail(item_type, u'**')
 
