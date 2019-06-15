@@ -42,18 +42,18 @@ class PropertiesReaderX:
     def setValue(self,section,key):
         PropertiesReaderX.config.set(section, key)
 
-path="/usr/local/share/zabbix/alertscripts/"
-
-if not os.path.exists(path):
-    path="/usr/lib/zabbix/alertscripts/{0}"
-else:
-    path="/usr/local/share/zabbix/alertscripts/{0}"
-
+# path="/usr/local/share/zabbix/alertscripts/"
+#
+# if not os.path.exists(path):
+#     path="/usr/lib/zabbix/alertscripts/{0}"
+# else:
+#     path="/usr/local/share/zabbix/alertscripts/{0}"
+path='C:\Users\Sansao\PycharmProjects\Email-Graph-ZABBIX_Python\{0}'
 itemname = 'ITEM'
 color    = '00C800'
 period   = 3600
 subject = itemname+ " Teste,"
-body     = 'testando de envio'
+body     = 'testando o envio'
 
 
 # Zabbix settings | Dados do Zabbix #############################################################################################################
@@ -194,7 +194,8 @@ def send_mail(x, i):
     text = '<p>{0},<p/><p>{1}</p>'.format(salutation, body)
 
     if re.search("(0|3)", x):
-        text += '<br><img src="cid:image1">'
+        URL = "{0}/history.php?action=showgraph&itemids[]={1}"
+        text += '<br><a href="{0}"><img src="cid:image1"></a>'.format(URL.format(zbx_server, itemid))
         msgImage = MIMEImage(i)
         msgImage.add_header('Content-ID', '<image1>')
         msgRoot.attach(msgImage)
@@ -312,17 +313,19 @@ itemid = requests.post('%s/api_jsonrpc.php' % zbx_server, headers = {'Content-ty
     data = json.dumps(
         {
             "jsonrpc": "2.0",
-            "method": "host.get",
+            "method": "item.get",
             "params": {
-                "output": ["hostid"],
-                "selectItems": ["itemid"],
+                "output": ["itemid"],
+                "hostid": "",
+                "search": {"key_": "agent.ping"}
             },
             "auth": auth,
             "id": 3
         }
     )
 )
-itemid = json.loads(itemid.text.encode('utf-8'))['result'][0]['items'][0]['itemid']
+itemid = json.loads(itemid.text.encode('utf-8'))['result'][9]['itemid']
+# itemid = 23299
 
 itemtype_api = requests.post('%s/api_jsonrpc.php' % zbx_server, headers = {'Content-type': 'application/json'},\
     data = json.dumps(
@@ -371,5 +374,5 @@ if __name__ == '__main__':
         send_mail(item_type, get_graph.content)
 
     else:
-        send_mail(item_type, r'**')
+        send_mail(item_type, None)
 

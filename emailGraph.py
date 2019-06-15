@@ -60,6 +60,7 @@ width      = PropertiesReaderX(path.format('configScrips.properties')).getValue(
 stime      = int(PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSection', 'stime'))    # Graph start time [3600 = 1 hour ago]  |  Hora inicial do grafico [3600 = 1 hora atras]
 
 # Ack message | Ack da Mensagem ################################################################################################################
+Ack = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSection', 'Ack')
 ack_message = 'Email enviado com sucesso para {0}'
 
 # Salutation | Saudação ########################################################################################################################
@@ -193,7 +194,8 @@ def send_mail(x, i):
     text = '<p>{0},<p/><p>{1}</p>'.format(salutation, body)
 
     if re.search("(0|3)", x):
-        text += '<br><img src="cid:image1">'
+        URL = "{0}/history.php?action=showgraph&itemids[]={1}"
+        text += '<br><a href="{0}"><img src="cid:image1"></a>'.format(URL.format(zbx_server, itemid))
         msgImage = MIMEImage(i)
         msgImage.add_header('Content-ID', '<image1>')
         msgRoot.attach(msgImage)
@@ -230,7 +232,9 @@ def send_mail(x, i):
             log.writelog('Error: Unable to send email | Não foi possível enviar o e-mail - {0}'.format(msg[1]), arqLog,"WARNING")
             smtp.quit()
             exit()
-        ack()
+
+        if re.search("(sim|s|yes|y)", str(Ack).lower()):
+            ack()
         logout_api()
         log.writelog('Successfully sent email | Email enviado com sucesso ({0})'.format(sys.argv[1]), arqLog, "INFO")
         smtp.quit()
@@ -406,5 +410,5 @@ if __name__ == '__main__':
         send_mail(item_type, get_graph.content)
 
     else:
-        send_mail(item_type, u'**')
+        send_mail(item_type, None)
 
