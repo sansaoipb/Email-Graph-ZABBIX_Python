@@ -208,11 +208,6 @@ def send_mail(x, i):
         smtp.ehlo()
 
         try:
-            smtp.connect()
-        except Exception:
-            pass
-
-        try:
             smtp.starttls()
         except Exception:
             pass
