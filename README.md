@@ -45,7 +45,7 @@ O "How to" foi testado no ZABBIX 2.4, 3.0, 3.2, 3.4, 4.0 e no 4.2 no Debian 8-9/
 <blockquote> <p> Debian/Ubuntu</p> </blockquote>
 <pre>$ sudo apt-get install -y wget unzip git dos2unix python-pip ; pip install requests<br></pre>
 <blockquote> <p>CentOS 6.x e 7</p> </blockquote>
-<pre>sudo yum install -y epel-release ; sudo yum install -y wget unzip git dos2unix python-pip ; pip install requests</pre>
+<pre>sudo yum install -y epel-release ; sudo yum -y update ; sudo yum install -y wget unzip git dos2unix python-pip ; pip install requests</pre>
 
 <!--
 <blockquote> <p>Instale os pacotes </p> </blockquote>
