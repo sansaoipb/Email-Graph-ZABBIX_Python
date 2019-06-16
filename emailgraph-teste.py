@@ -42,13 +42,13 @@ class PropertiesReaderX:
     def setValue(self,section,key):
         PropertiesReaderX.config.set(section, key)
 
-# path="/usr/local/share/zabbix/alertscripts/"
-#
-# if not os.path.exists(path):
-#     path="/usr/lib/zabbix/alertscripts/{0}"
-# else:
-#     path="/usr/local/share/zabbix/alertscripts/{0}"
-path='C:\Users\Sansao\PycharmProjects\Email-Graph-ZABBIX_Python\{0}'
+path="/usr/local/share/zabbix/alertscripts/"
+
+if not os.path.exists(path):
+    path="/usr/lib/zabbix/alertscripts/{0}"
+else:
+    path="/usr/local/share/zabbix/alertscripts/{0}"
+
 itemname = 'ITEM'
 color    = '00C800'
 period   = 3600
