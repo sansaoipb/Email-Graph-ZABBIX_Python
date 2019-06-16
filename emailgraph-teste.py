@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Envio de gráfico por Telegram através do ZABBIX (Send zabbix alerts graph Telegram)
+# Envio de gráfico por Email através do ZABBIX (Send zabbix alerts graph Mail)
 #
 # 
 # Copyright (C) <2016>
@@ -42,19 +42,18 @@ class PropertiesReaderX:
     def setValue(self,section,key):
         PropertiesReaderX.config.set(section, key)
 
-# path="/usr/local/share/zabbix/alertscripts/"
-#
-# if not os.path.exists(path):
-#     path="/usr/lib/zabbix/alertscripts/{0}"
-# else:
-#     path="/usr/local/share/zabbix/alertscripts/{0}"
-path='C:\Users\Sansao\PycharmProjects\Email-Graph-ZABBIX_Python\{0}'
+path="/usr/local/share/zabbix/alertscripts/"
+
+if not os.path.exists(path):
+    path="/usr/lib/zabbix/alertscripts/{0}"
+else:
+    path="/usr/local/share/zabbix/alertscripts/{0}"
+
 itemname = 'ITEM'
 color    = '00C800'
 period   = 3600
 subject = itemname+ " Teste,"
 body     = 'testando o envio'
-
 
 # Zabbix settings | Dados do Zabbix #############################################################################################################
 zbx_server = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSection', 'url')
