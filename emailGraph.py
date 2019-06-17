@@ -233,8 +233,8 @@ def send_mail(x, i):
         logout_api()
         log.writelog('Successfully sent email | Email enviado com sucesso ({0})'.format(sys.argv[1]), arqLog, "INFO")
         smtp.quit()
-    except smtplib.SMTPException:
-        log.writelog('Error: Unable to send email | Não foi possível enviar o e-mail ({0})'.format(sys.argv[1]), arqLog,"CRITICAL")
+    except smtplib.SMTPException as msg:
+        log.writelog('Error: Unable to send email | Não foi possível enviar o e-mail - {0}'.format(msg), arqLog,"CRITICAL")
         logout_api()
         smtp.quit()
         exit()
