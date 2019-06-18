@@ -60,22 +60,26 @@ width      = PropertiesReaderX(path.format('configScrips.properties')).getValue(
 stime      = int(PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSection', 'stime'))    # Graph start time [3600 = 1 hour ago]  |  Hora inicial do grafico [3600 = 1 hora atras]
 
 # Ack message | Ack da Mensagem ################################################################################################################
-Ack = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSection', 'Ack')
+Ack = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSection', 'ack')
 ack_message = 'Email enviado com sucesso para {0}'
 
 # Salutation | Saudação ########################################################################################################################
-good_morning   = 'Bom dia'
-good_afternoon = 'Boa Tarde'
-good_evening   = 'Boa Noite'
+Salutation = PropertiesReaderX(path.format('configScrips.properties')).getValue('PathSection', 'salutation')
+if re.search("(sim|s|yes|y)", str(Salutation).lower()):
+    good_morning   = 'Bom dia'
+    good_afternoon = 'Boa Tarde'
+    good_evening   = 'Boa Noite'
 
-hora = int(time.strftime("%H"))
+    hora = int(time.strftime("%H"))
 
-if hora < 12:
-    salutation = good_morning
-elif hora >= 18:
-    salutation = good_evening
+    if hora < 12:
+        salutation = "<p>{0},<p/>".format(good_morning)
+    elif hora >= 18:
+        salutation = "<p>{0},<p/>".format(good_evening)
+    else:
+        salutation = "<p>{0},<p/>".format(good_afternoon)
 else:
-    salutation = good_afternoon
+    salutation = ""
 
 # Diretórios
 # Log path | Diretório do log
@@ -191,7 +195,7 @@ def send_mail(x, i):
 
     msgAlternative = MIMEMultipart('alternative')
     msgRoot.attach(msgAlternative)
-    text = '<p>{0},<p/><p>{1}</p>'.format(salutation, body)
+    text = '{0}<p>{1}</p>'.format(salutation, body)
 
     if re.search("(0|3)", x):
         URL = "{0}/history.php?action=showgraph&itemids[]={1}"
