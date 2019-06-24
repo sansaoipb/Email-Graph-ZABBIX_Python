@@ -181,7 +181,7 @@ class Log:
 log = Log
 
 try:
-    itemname, eventid, itemid, color, period, body = sys.argv[3].split('#',6)
+    itemname, eventid, itemid, color, period, body = sys.argv[3].split('#', 5)
     period = int(period)
 except ValueError as e:
     log.writelog('{0} >> at split (itemname, eventid, itemid, color, period, body) | Quantidade de argumentos insuficientes no split (itemname, eventid, itemid, color, period, body)'.format(str(e)), arqLog, "ERROR")
