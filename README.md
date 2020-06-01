@@ -91,10 +91,20 @@ Ao final da execução do script, ele indicará qual pasta você acessará.
 
 Entre no arquivo <code>configScrips.properties</code> e edite os campos abaixo:
 
+<blockquote>[PathSection]</blockquote>
+
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “url” = 'http://127.0.0.1/zabbix' - URL de acesso ao FRONT com "http://" </font></font></li>
-<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “user”   = 'Admin';</font></font></li>
-<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “pass”     = 'zabbix';</font></font></li></ul>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “user” = 'Admin'</font></font></li>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “pass” = 'zabbix'</font></font></li>
+</ul>
+
+<blockquote>[PathSectionEmail]</blockquote>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “smtp_server” = 'smtp.gmail.com:587'</font></font></li>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “mail_user” = 'SeuEmail@gmail.com'</font></font></li>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="checked" disabled="disabled"><font><font class=""> “mail_pass” = 'SuaSenha'</font></font></li>
+</ul>
 
 <b>OBS:</b><br>
 <b>1 – </b>O usuário que você declarar no campo <i>“user”</i> precisa ter permissão no mínimo de leitura no ambiente.<br>
