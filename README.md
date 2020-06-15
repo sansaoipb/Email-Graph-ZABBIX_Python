@@ -117,7 +117,7 @@ Entre no arquivo <code>configScrips.properties</code> e edite os campos abaixo:
 Script para realização do teste:<br>
 <b>Script, Email.</b><br>
 Ex:<br>
-<pre>./emailgraph-teste.py SeuEmail@Provedor.com </pre>
+<pre>sudo -u zabbix ./emailgraph-teste.py SeuEmail@Provedor.com </pre>
 
 <!-- <b>1 – </b>”123456” é um número fictício para exemplificar, busque uma ID válida em seu ambiente para realização do teste;<br>
 <b>2 – </b>"00C800" é o verde "padrão" do zabbix em Hexadecimal;<br>
