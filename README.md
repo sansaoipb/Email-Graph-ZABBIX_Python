@@ -29,7 +29,7 @@
 -->
 
 # Email-Graph-ZABBIX_Python
-Em caso de dúvida, sugestão ou dificuldade junte-se a nós no <b>Grupo do Telegram</b> <a href="https://t.me/joinchat/B7Jjiz-ttMgvu3zJKarK2w" class="wikilink2" title="Ingressar no Grupo" rel="nofollow">Gráfico no Email e Telegram</a>.
+Em caso de dúvida, sugestão ou dificuldade junte-se a nós no <b>Grupo do Telegram</b> <a href="https://t.me/joinchat/B7Jjiz-ttMgxdyD3cRpuhg" class="wikilink2" title="Ingressar no Grupo" rel="nofollow">Gráfico no Email e Telegram</a>.
 
 O "How to" foi testado no ZABBIX 2.4, 3.0, 3.2, 3.4, 4.0 e no 4.2 no Debian 8-9/Ubuntu 14-18 e CentOS 6.x e 7, caso não utilize estas distros procure os pacotes descritos para sua necessidade.
 
