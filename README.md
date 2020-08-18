@@ -109,7 +109,8 @@ Entre no arquivo <code>configScrips.properties</code> e edite os campos abaixo:
 
 <b>OBS:</b><br>
 <b>1 – </b>O usuário que você declarar no campo <i>“user”</i> precisa ter permissão no mínimo de leitura no ambiente.<br>
-<b>2 – </b>Se usar gmail, é preciso alterar o acesso à conta para aplicativos menos seguros, altere 
+<b>2 – </b>Se usar gmail, é preciso alterar o acesso à conta para aplicativos, se tiver "Verificação em duas etapas" ativado, é necessário criar uma "Senha de app", crie 
+<a href="https://support.google.com/accounts/answer/185833" class="wikilink2" title="App MAIS seguros" rel="nofollow">Aqui</a>.<br>Caso não tenha verificação em duas etapas, pode somente ativar "Acesso a app menos seguros", altere 
 <a href="https://support.google.com/accounts/answer/6010255?hl=pt-BR" class="wikilink2" title="App menos seguros" rel="nofollow">Aqui</a>.<br>
 
 <h3><a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" role="img" version="1.1" viewBox="0 0 16 16" width="16"><path d="M4 9h1v1h-1c-1.5 0-3-1.69-3-3.5s1.55-3.5 3-3.5h4c1.45 0 3 1.69 3 3.5 0 1.41-0.91 2.72-2 3.25v-1.16c0.58-0.45 1-1.27 1-2.09 0-1.28-1.02-2.5-2-2.5H4c-0.98 0-2 1.22-2 2.5s1 2.5 2 2.5z m9-3h-1v1h1c1 0 2 1.22 2 2.5s-1.02 2.5-2 2.5H9c-0.98 0-2-1.22-2-2.5 0-0.83 0.42-1.64 1-2.09v-1.16c-1.09 0.53-2 1.84-2 3.25 0 1.81 1.55 3.5 3 3.5h4c1.45 0 3-1.69 3-3.5s-1.5-3.5-3-3.5z"></path></svg></a>Comando para teste</h3>
